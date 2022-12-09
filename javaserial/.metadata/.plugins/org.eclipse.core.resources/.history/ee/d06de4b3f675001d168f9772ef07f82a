@@ -1,0 +1,26 @@
+package com.java.serial;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+public class DataProc {
+	String recvData;
+	
+	float value;
+	
+	public DataProc(String recvData) {
+		this.recvData = recvData;
+		
+//		System.out.print(this.getRecvData());
+		
+		Gson gson = new GsonBuilder().create();
+		
+		DataProc proc = gson.fromJson(this.getRecvData(), DataProc.class);
+	}
+	
+	public String getRecvData() {
+		
+		return this.recvData;
+	}
+}
+

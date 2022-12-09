@@ -1,0 +1,18 @@
+package com.java.serial;
+
+public class DataProc {
+	String recvData;
+	
+	public DataProc(String recvData) {
+		this.recvData = recvData;
+		
+//		System.out.print(this.getRecvData());
+	}
+	
+	public String getRecvData() {
+		
+		System.out.print(this.recvData);
+		return this.recvData;
+	}
+}
+

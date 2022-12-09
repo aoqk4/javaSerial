@@ -1,0 +1,23 @@
+package com.java.serial;
+
+public class DataProc {
+	private String sensor;
+	
+	private float temp;
+	
+	public DataProc(String sensor, float temp) {
+		
+		this.sensor = sensor;
+		this.temp = temp;
+	}
+	
+	public String getSensor() {
+		
+		return this.sensor;
+	}
+	
+	public float getValue() {
+		return this.temp;
+	}
+}
+

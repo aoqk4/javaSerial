@@ -1,0 +1,12 @@
+package com.java.serial;
+
+public class DataProc {
+	
+	private String recvData;
+	
+	public DataProc(float recvData) {
+		
+		this.recvData = recvData;
+	}
+}
+

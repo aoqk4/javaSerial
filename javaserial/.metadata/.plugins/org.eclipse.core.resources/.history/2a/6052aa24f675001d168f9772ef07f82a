@@ -1,0 +1,9 @@
+package com.java.serial;
+
+public class Value {
+	private float value;
+	
+	public Value(float value) {
+		this.value = value;
+	}
+}

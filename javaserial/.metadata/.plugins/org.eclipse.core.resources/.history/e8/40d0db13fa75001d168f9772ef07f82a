@@ -1,0 +1,15 @@
+package com.java.serial;
+
+//import com.google.gson.Gson;
+//import com.google.gson.GsonBuilder;
+
+public class Main {
+	public static void main(String[] args) {
+		try {
+			(new Serial()).Connect("COM8");
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
