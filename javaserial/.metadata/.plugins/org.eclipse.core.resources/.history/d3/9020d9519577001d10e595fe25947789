@@ -1,0 +1,8 @@
+package com.java.serial;
+
+public class DatabaseSerial {
+	private String driver;
+	private String url;
+	private String user;
+	private String password;
+}

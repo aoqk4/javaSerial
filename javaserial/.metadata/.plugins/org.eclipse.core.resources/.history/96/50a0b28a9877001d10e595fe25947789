@@ -1,0 +1,22 @@
+package com.java.serial;
+
+import java.sql.Connection;
+
+public class DatabaseSerial {
+	private String driver;
+	private String url;
+	private String user;
+	private String password;
+	
+	private Connection connection;
+	
+	
+	public DatabaseSerial() {
+		this.driver = "jdbc.driver";
+		this.url = "jdbc.url";
+		this.user = "jdbc.user";
+		this.password = "jdbc.password";
+	}
+	
+	
+}

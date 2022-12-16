@@ -33,8 +33,6 @@ public class Serial {
 												   SerialPort.PARITY_NONE);
 				}
 				
-				System.out.println("Connect!!!!!!!!!");
-				
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 				
 				(new Thread(new SerialRead(bufferedReader))).start();
