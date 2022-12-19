@@ -8,9 +8,22 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.Timestamp;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Calendar;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class SerialRead implements Runnable {
 
@@ -34,12 +47,12 @@ public class SerialRead implements Runnable {
 		HttpURLConnection httpConn = null;
 
 		JSONObject responseJson = null;
-
-		StringBuilder buffer = null;
-		OutputStream outputStream = null;
-		BufferedReader bufferedReader = null;
-		BufferedWriter bufferedWriter = null;
-		String readLine = null;
+		
+	    StringBuilder buffer = null;
+	    OutputStream outputStream = null;
+	    BufferedReader bufferedReader = null;
+	    BufferedWriter bufferedWriter = null;
+	    String readLine = null;
 
 		try {
 		} catch (Exception e) {
@@ -56,6 +69,7 @@ public class SerialRead implements Runnable {
 
 					// 측정 시간 체크
 					java.sql.Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
+//			        System.out.println(timestamp); // 생성한 timestamp 출력
 
 					JSONObject jsonObj = null;
 
@@ -79,35 +93,27 @@ public class SerialRead implements Runnable {
 					httpConn.setUseCaches(false);
 					httpConn.setDefaultUseCaches(false);
 
-					if (httpConn != null) {
-						outputStream = httpConn.getOutputStream();
+					// send PUT
+					int responseCode = httpConn.getResponseCode();
 
-						bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-						bufferedWriter.write(jsonObj.toString());
-						bufferedWriter.flush();
+					System.out.println(jsonObj.toString());
 
-						buffer = new StringBuilder();
-						if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+					outputStream = httpConn.getOutputStream();
 
-							bufferedReader = new BufferedReader(
-									new InputStreamReader(httpConn.getInputStream(), "UTF-8"));
-							while ((readLine = bufferedReader.readLine()) != null) {
-								buffer.append(readLine).append("\n");
-							}
-						} else {
-							buffer.append("\"code\" : \"" + httpConn.getResponseCode() + "\"");
-							buffer.append(", \"message\" : \"" + httpConn.getResponseMessage() + "\"");
+					bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+					bufferedWriter.write(jsonObj.toString());
+					bufferedWriter.flush();
+
+					buffer = new StringBuilder();
+					if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+						bufferedReader = new BufferedReader(
+								new InputStreamReader(httpConn.getInputStream(), "UTF-8"));
+						while ((readLine = bufferedReader.readLine()) != null) {
+							buffer.append(readLine).append("\n");
 						}
-					}
-
-					if (bufferedWriter != null) {
-						bufferedWriter.close();
-					}
-					if (outputStream != null) {
-						outputStream.close();
-					}
-					if (bufferedReader != null) {
-						bufferedReader.close();
+					} else {
+						buffer.append("\"code\" : \"" + urlConnection.getResponseCode() + "\"");
+						buffer.append(", \"message\" : \"" + urlConnection.getResponseMessage() + "\"");
 					}
 
 					// for DB

@@ -1,16 +1,27 @@
 package com.java.serial;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.Timestamp;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Calendar;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class SerialRead implements Runnable {
 
@@ -35,12 +46,6 @@ public class SerialRead implements Runnable {
 
 		JSONObject responseJson = null;
 
-		StringBuilder buffer = null;
-		OutputStream outputStream = null;
-		BufferedReader bufferedReader = null;
-		BufferedWriter bufferedWriter = null;
-		String readLine = null;
-
 		try {
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,6 +61,7 @@ public class SerialRead implements Runnable {
 
 					// 측정 시간 체크
 					java.sql.Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
+//			        System.out.println(timestamp); // 생성한 timestamp 출력
 
 					JSONObject jsonObj = null;
 
@@ -70,46 +76,17 @@ public class SerialRead implements Runnable {
 					httpConn = (HttpURLConnection) url.openConnection();
 
 					httpConn.setRequestMethod("POST");
-					httpConn.setRequestProperty("Accept", "application/json");
 					httpConn.setRequestProperty("Content-Type", "application/json");
 					httpConn.setRequestProperty("Transfer-Encoding", "chunked");
 					httpConn.setRequestProperty("Connection", "keep-alive");
-					httpConn.setDoInput(true);
-					httpConn.setDoOutput(true); // POST 데이터를 OutputStream으로 넘겨 주겠다는 설정
-					httpConn.setUseCaches(false);
-					httpConn.setDefaultUseCaches(false);
+					httpConn.setDoOutput(true);
 
-					if (httpConn != null) {
-						outputStream = httpConn.getOutputStream();
-
-						bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-						bufferedWriter.write(jsonObj.toString());
-						bufferedWriter.flush();
-
-						buffer = new StringBuilder();
-						if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-
-							bufferedReader = new BufferedReader(
-									new InputStreamReader(httpConn.getInputStream(), "UTF-8"));
-							while ((readLine = bufferedReader.readLine()) != null) {
-								buffer.append(readLine).append("\n");
-							}
-						} else {
-							buffer.append("\"code\" : \"" + httpConn.getResponseCode() + "\"");
-							buffer.append(", \"message\" : \"" + httpConn.getResponseMessage() + "\"");
-						}
-					}
-
-					if (bufferedWriter != null) {
-						bufferedWriter.close();
-					}
-					if (outputStream != null) {
-						outputStream.close();
-					}
-					if (bufferedReader != null) {
-						bufferedReader.close();
-					}
-
+					// send PUT
+					int responseCode = httpConn.getResponseCode();
+					
+					
+					System.out.println(jsonObj.toString().getClass());
+				
 					// for DB
 //					String sql = "INSERT INTO DEVICE_SENSOR (DEVICE_ID, SENSOR_ID, SENSOR_ST, SENSOR_VAL, CREATED_AT)"
 //							+ " VALUES"
